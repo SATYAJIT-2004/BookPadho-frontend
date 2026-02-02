@@ -124,8 +124,6 @@ const Register = () => {
             </label>
           </div>
         </div>
-        {
-          (formData.role == "buyer" &&
              <div className="mb-4">
           <label className="text-sm text-gray-600">Address</label>
           <input
@@ -136,10 +134,8 @@ const Register = () => {
             required
           />
         </div>
-          )
-        }
-
-        {/* Button */}
+  
+      {/* Button */}
         <button
           type="submit"
           className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition duration-200"
