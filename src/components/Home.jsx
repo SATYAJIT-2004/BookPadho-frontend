@@ -1,50 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import API from '../api/axios'
-import BookCard from './BookCard'
-import { SearchIcon, SlidersHorizontal } from 'lucide-react'
-import Footer from './Footer'
+import React, { useEffect, useState } from "react";
+import API from "../api/axios";
+import BookCard from "./BookCard";
+import { SearchIcon, SlidersHorizontal } from "lucide-react";
+import Footer from "./Footer";
+import BookCardSkeleton from "./BookcardSkeleton";
 
 const Home = () => {
-  const [books, setBooks] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [Tempfilters, setTempFilters] = useState({
-    keyword: '',
-    category: '',
-    condition: '',
-    minPrice: '',
-    maxPrice: '',
-  })
-  const [filters, setFilters] = useState({})
-  const [searchTerm, setSearchTerm] = useState('')
-  const [showSearch, setShowSearch] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
+    keyword: "",
+    category: "",
+    condition: "",
+    minPrice: "",
+    maxPrice: "",
+  });
+  const [filters, setFilters] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        setLoading(true)
-        const { data } = await API.get('/books', { params: filters })
-        setBooks(data.books || [])
+        setLoading(true);
+        const { data } = await API.get("/books", { params: filters });
+        setBooks(data.books || []);
       } catch (err) {
-        setError(err.message || 'Failed to fetch books')
-        setBooks([])
+        setError(err.message || "Failed to fetch books");
+        setBooks([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchBooks()
-  }, [filters])
+    };
+    fetchBooks();
+  }, [filters]);
 
-  if (loading) return <div>Loading books...</div>
-  if (error) return <div>Error: {error}</div>
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="min-h-screen from bg-indigo-400 to-indigo-700 px-4 sm:px-6 py-8 overflow-x-hidden">
-      
+    <div className="min-h-screen bg-gradient-to-br from-indigo-400 to-indigo-700 px-4 sm:px-6 py-8 overflow-x-hidden">
       {/* HERO SECTION */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center mb-12 md:mb-16">
-        
         {/* LEFT CONTENT */}
         <div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-gray-900 leading-snug md:leading-tight">
@@ -52,8 +50,8 @@ const Home = () => {
           </h1>
 
           <p className="text-gray-800 mt-4 max-w-md">
-            Don't let the story end on the shelf.
-            Discover your next favorite book and bring new stories home today.
+            Don't let the story end on the shelf. Discover your next favorite
+            book and bring new stories home today.
           </p>
 
           <button className="mt-6 bg-gray-900 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition">
@@ -79,9 +77,9 @@ const Home = () => {
           <p className="text-gray-700 text-sm leading-relaxed">
             <span className="italic font-medium text-gray-900">
               Fire and Blood
-            </span>{' '}
-            explores the rise of House Targaryen, from the conquest of Westeros to the
-            devastating civil war known as the Dance of the Dragons.
+            </span>{" "}
+            explores the rise of House Targaryen, from the conquest of Westeros
+            to the devastating civil war known as the Dance of the Dragons.
           </p>
         </div>
       </div>
@@ -104,7 +102,7 @@ const Home = () => {
               className="px-4 py-2 w-48 sm:w-64 outline-none text-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === 'Escape' && setShowSearch(false)}
+              onKeyDown={(e) => e.key === "Escape" && setShowSearch(false)}
             />
             <button
               className="bg-gray-900 text-white px-4 py-2"
@@ -113,10 +111,10 @@ const Home = () => {
                   Object.entries({
                     ...filters,
                     keyword: searchTerm.trim(),
-                  }).filter(([_, value]) => value !== '')
-                )
-                setFilters(cleanedFilters)
-                setShowSearch(false)
+                  }).filter(([_, value]) => value !== ""),
+                );
+                setFilters(cleanedFilters);
+                setShowSearch(false);
               }}
             >
               <SearchIcon className="size-5" />
@@ -196,8 +194,8 @@ const Home = () => {
             <button
               className="bg-gray-900 text-white w-full py-2 rounded text-sm"
               onClick={() => {
-                setFilters(Tempfilters)
-                setShowFilters(false)
+                setFilters(Tempfilters);
+                setShowFilters(false);
               }}
             >
               Apply Filters
@@ -209,9 +207,11 @@ const Home = () => {
       {/* BOOK GRID */}
       <div className="max-w-7xl mx-auto mt-10">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-10">
-          {books.map((book) => (
-            <BookCard key={book._id} book={book} />
-          ))}
+          {loading
+            ? Array.from({ length: 10 }).map((_, index) => (
+                <BookCardSkeleton key={index} />
+              ))
+            : books.map((book) => <BookCard key={book._id} book={book} />)}
         </div>
       </div>
 
@@ -219,7 +219,7 @@ const Home = () => {
         <Footer />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
